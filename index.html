@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TASK 03 (Alternative) - Tic Tac Toe</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;background:#242332;color:#fff;font-family:'Space Grotesk',sans-serif;display:flex;justify-content:center;padding:24px;position:relative;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(500px at 15% 10%,rgba(63,209,197,.14),transparent),radial-gradient(500px at 85% 90%,rgba(100,140,255,.18),transparent)}
+.shape{position:fixed;pointer-events:none;z-index:1}
+.s1{top:0;left:0;width:160px;height:90px;border:10px solid #3fd1c7;border-left:0;border-top:0;border-radius:0 0 70px 0}
+.s2{top:12px;right:0;width:85px;height:46px;background:#6a90d8;border-radius:40px 0 0 40px}
+.s3{bottom:0;left:0;width:130px;height:90px;border:12px solid #6a90d8;border-left:0;border-bottom:0;border-radius:0 90px 0 0;opacity:.8}
+.s4{bottom:0;right:0;width:140px;height:140px;border:12px solid #3fd1c7;border-right:0;border-bottom:0;border-radius:90px 0 0 0}
+.dots{position:fixed;right:28px;bottom:28px;display:grid;grid-template-columns:repeat(7,4px);gap:8px;opacity:.5}
+.dots i{width:4px;height:4px;background:#e8c97a;border-radius:50%;display:block}
+
+.wrap{position:relative;z-index:2;width:100%;max-width:1120px;display:grid;grid-template-columns:1fr 400px;gap:28px;align-items:start}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}}
+.badge{border:1.5px solid #ff3b5a;padding:7px 22px;font-weight:800;font-size:13px;letter-spacing:.1em;display:inline-block}
+.title{font-size:40px;line-height:.95;font-weight:800;margin-top:18px}
+.title span{font-size:14px;opacity:.6;letter-spacing:.25em;display:block;margin-top:8px;font-weight:400}
+.desc{margin-top:16px;opacity:.85;font-size:13.5px;line-height:1.7;max-width:400px}
+
+.game-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(18px);border-radius:24px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.5);position:relative}
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tab{flex:1;padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:#fff;font-weight:700;font-size:12px;letter-spacing:.08em;cursor:pointer;transition:.2s}
+.tab.active{background:#fff;color:#000}
+.status{font-family:'JetBrains Mono';font-size:13px;opacity:.7;letter-spacing:.08em;display:flex;justify-content:space-between;margin-bottom:12px}
+.status b{color:#3fd1c7}
+
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.cell{aspect-ratio:1;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.12);border-radius:18px;display:grid;place-items:center;font-size:42px;font-weight:800;cursor:pointer;transition:.2s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden}
+.cell:hover{background:rgba(255,255,255,.1);transform:scale(1.03)}
+.cell.x{color:#3fd1c7;text-shadow:0 0 20px #3fd1c777}
+.cell.o{color:#6a90d8;text-shadow:0 0 20px #6a90d877}
+.cell.win{background:rgba(63,209,197,.2)!important;border-color:#3fd1c7;animation:pop.5s}
+@keyframes pop{0%{transform:scale(.8)}50%{transform:scale(1.12)}100%{transform:scale(1)}}
+.cell::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at center,rgba(255,255,255,.15),transparent 70%);opacity:0;transition:.3s}
+.cell:active::after{opacity:1}
+
+.controls{display:flex;gap:10px;margin-top:14px}
+.btn{flex:1;border:0;border-radius:12px;padding:12px;font-weight:800;font-size:12px;letter-spacing:.08em;cursor:pointer;transition:.2s}
+.btn-r{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.15)}
+.btn-r:hover{background:rgba(255,255,255,.14)}
+.btn-n{background:#fff;color:#000}
+.btn-n:hover{background:#3fd1c7;box-shadow:0 0 20px #3fd1c766}
+
+.line{position:absolute;background:#3fd1c7;height:4px;border-radius:4px;box-shadow:0 0 12px #3fd1c7;transform-origin:left;transition:.5s;pointer-events:none;z-index:5}
+</style>
+</head>
+<body>
+<div class="shape s1"></div><div class="shape s2"></div><div class="shape s3"></div><div class="shape s4"></div>
+<div class="dots"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+<div class="wrap">
+  <div>
+    
+    <div class="title">TIC-TAC-TOE WEB<br>APPLICATION</div>
+    <div class="title"><span>INTERACTIVE & ANIMATED</span></div>
+    <div class="desc">
+      Build a tic-tac-toe web application against each other or Computer.<br><br>
+      Implement functions to handle user clicks, track game state, and check for winning conditions, you can create an interactive and engaging tic-tac-toe game.
+      <br><br><small style="opacity:.5">SkillCraft Technology • vs Friend / vs AI • Minimax AI</small>
+    </div>
+  </div>
+
+  <div class="game-card" id="gameCard">
+    <div class="tabs">
+      <button class="tab active" id="tabF">👥 VS FRIEND</button>
+      <button class="tab" id="tabC">🤖 VS COMPUTER</button>
+    </div>
+    <div class="status"><span id="turn">X TURN</span><span><b id="sx">0</b> - <b id="so">0</b> - <b id="sd">0</b> DRAW</span></div>
+    <div class="board" id="board"></div>
+    <div class="controls">
+      <button class="btn btn-r" onclick="resetBoard()">↺ RESET</button>
+      <button class="btn btn-n" onclick="newGame()">NEW GAME</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const boardEl=document.getElementById('board'), turnEl=document.getElementById('turn'), tabF=document.getElementById('tabF'), tabC=document.getElementById('tabC');
+const sx=document.getElementById('sx'), so=document.getElementById('so'), sd=document.getElementById('sd');
+let cells=[], turn='X', mode='friend', over=false, scores={x:0,o:0,d:0};
+
+function init(){
+ boardEl.innerHTML='';
+ cells=Array(9).fill('');
+ for(let i=0;i<9;i++){
+  let c=document.createElement('div'); c.className='cell'; c.dataset.i=i;
+  c.onclick=()=>move(i);
+  boardEl.appendChild(c);
+ }
+ turn='X'; over=false; updateStatus();
+}
+function move(i){
+ if(over || cells[i]!=='') return;
+ cells[i]=turn;
+ render();
+ if(checkWin()) return;
+ turn=turn==='X'?'O':'X';
+ updateStatus();
+ if(mode==='computer' && turn==='O' &&!over){
+  setTimeout(computerMove, 420);
+ }
+}
+function render(){
+ [...boardEl.children].forEach((el,idx)=>{
+  el.textContent=cells[idx];
+  el.classList.remove('x','o','win');
+  if(cells[idx]) el.classList.add(cells[idx].toLowerCase());
+ });
+}
+function updateStatus(){
+ if(over) return;
+ turnEl.textContent= turn + (mode==='computer' && turn==='O'? ' (AI) THINKING...' : ' TURN');
+}
+const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+function checkWin(){
+ for(let w of wins){
+  let [a,b,c]=w;
+  if(cells[a] && cells[a]===cells[b] && cells[a]===cells[c]){
+   over=true;
+   w.forEach(idx=>boardEl.children[idx].classList.add('win'));
+   turnEl.textContent= cells[a]+' WINS 🎉';
+   if(cells[a]==='X') scores.x++; else scores.o++;
+   updateScore(); return true;
+  }
+ }
+ if(!cells.includes('')){over=true; turnEl.textContent='DRAW 🤝'; scores.d++; updateScore(); return true;}
+ return false;
+}
+function updateScore(){sx.textContent=scores.x; so.textContent=scores.o; sd.textContent=scores.d;}
+
+function resetBoard(){init();}
+function newGame(){scores={x:0,o:0,d:0};updateScore();init();}
+
+tabF.onclick=()=>{mode='friend'; tabF.classList.add('active'); tabC.classList.remove('active'); newGame();}
+tabC.onclick=()=>{mode='computer'; tabC.classList.add('active'); tabF.classList.remove('active'); newGame();}
+
+// AI - Minimax
+function computerMove(){
+ let best=-Infinity, moveIdx=-1;
+ for(let i=0;i<9;i++) if(cells[i]===''){
+  cells[i]='O';
+  let score=minimax(cells,0,false);
+  cells[i]='';
+  if(score>best){best=score; moveIdx=i;}
+ }
+ if(moveIdx!==-1) move(moveIdx);
+}
+function minimax(b,d,isMax){
+ let res=evalBoard(b);
+ if(res!==null) return res;
+ if(isMax){
+  let best=-Infinity;
+  for(let i=0;i<9;i++) if(b[i]===''){b[i]='O'; best=Math.max(best,minimax(b,d+1,false)); b[i]='';}
+  return best;
+ }else{
+  let best=Infinity;
+  for(let i=0;i<9;i++) if(b[i]===''){b[i]='X'; best=Math.min(best,minimax(b,d+1,true)); b[i]='';}
+  return best;
+ }
+}
+function evalBoard(b){
+ for(let w of wins){let [a,b1,c]=w; if(b[a]&&b[a]===b[b1]&&b[a]===b[c]){return b[a]==='O'?10-w.length: -10}}
+ if(!b.includes('')) return 0;
+ return null;
+}
+
+init();
+</script>
+</body>
+</html>
